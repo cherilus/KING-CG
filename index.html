@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhotoEdit Pro</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white font-sans"><header class="flex items-center gap-4 p-4 bg-gray-900">
+  <img src="images/kingcg-logo.png" alt="Logo KING CG" class="h-12 w-auto rounded-full">
+  <h1 class="text-2xl font-bold text-white">KING CG Photoshop Design</h1>
+</header>
+
+  <!-- Top Nav -->
+  <header class="flex items-center justify-between p-4 bg-gray-800">
+    <h1 class="text-2xl font-bold">🖼️ KING CG PHOTOSHOP DESIGN</h1>
+    <nav class="flex items-center space-x-4">
+      <button class="hover:text-blue-400">Nouvo</button>
+      <button class="hover:text-blue-400">Louvri</button>
+      <button class="hover:text-blue-400">Sove</button>
+      <select class="bg-gray-700 text-white rounded px-2 py-1">
+        <option>🇭🇹 Kreyòl</option>
+        <option>🇬🇧 English</option>
+        <option>🇫🇷 Français</option>
+      </select>
+    </nav>
+  </header>
+
+  <!-- Main Interface -->
+  <main class="flex h-[85vh]">
+    <!-- Sidebar Tools -->
+    <aside class="w-16 bg-gray-800 flex flex-col items-center py-4 space-y-4">
+      <button title="Crop ✂️">✂️</button>
+      <button title="Brush 🎨">🎨</button>
+      <button title="Select 🧲">🧲</button>
+      <button title="Mask 🧪">🧪</button>
+    </aside>
+
+    <!-- Canvas Workspace -->
+    <section class="flex-1 flex items-center justify-center bg-gray-700">
+      <div class="w-4/5 h-4/5 bg-white text-gray-800 flex items-center justify-center">
+        <p>🏞️ Mete imaj ou isit la</p>
+      </div>
+    </section>
+
+    <!-- Layer Panel -->
+    <aside class="w-64 bg-gray-800 p-4 space-y-2">
+      <h2 class="text-lg font-semibold mb-2">📐 Layers</h2>
+      <div class="bg-gray-700 p-2 rounded">Layer 1 - Background</div>
+      <div class="bg-gray-700 p-2 rounded">Layer 2 - Text</div>
+      <button class="mt-4 bg-blue-500 px-3 py-1 rounded hover:bg-blue-600">➕ Add Layer</button>
+    </aside>
+  </main>
+
+  <!-- Footer Status -->
+  <footer class="bg-gray-800 text-center py-2 text-sm">
+    Shortcut Keys • Rezolisyon: 1920x1080 • Fichye aktyèl: PSD
+  </footer>
+
+</body>
+</html>
+<div class="mt-4">
+  <input type="file" id="uploadImage" accept="image/*" class="bg-gray-700 text-white p-2 rounded" />
+</div>
+<body></body><script>
+  const input = document.getElementById('uploadImage');
+
+  input.addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const preview = document.createElement('img');
+        preview.src = reader.result;
+        preview.className = "max-w-full h-auto mt-4";
+        document.querySelector("section").appendChild(preview);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+<aside class="w-64 bg-gray-800 p-4 space-y-4">
+  <h2 class="text-lg font-semibold mb-4">📐 Layers</h2>
+
+  <!-- Layer 1 -->
+  <div class="bg-gray-700 p-2 rounded space-y-2">
+    <p class="font-semibold">Layer 1 - Background</p>
+    <input type="file" accept="image/*" id="layer1Upload" class="bg-gray-600 text-white p-1 w-full rounded">
+    <img id="layer1Img" class="w-full h-auto rounded" />
+  </div>
+
+  <!-- Layer 2 -->
+  <div class="bg-gray-700 p-2 rounded space-y-2">
+    <p class="font-semibold">Layer 2 - Text</p>
+    <input type="file" accept="image/*" id="layer2Upload" class="bg-gray-600 text-white p-1 w-full rounded">
+    <img id="layer2Img" class="w-full h-auto rounded" />
+  </div>
+
+  <!-- Add More Layers Bouton -->
+  <button class="mt-4 bg-blue-500 px-3 py-1 rounded hover:bg-blue-600">➕ Add Layer</button>
+</aside>
+<script>
+  function setupLayerUpload(uploadId, imgId) {
+    const input = document.getElementById(uploadId);
+    const img = document.getElementById(imgId);
+
+    input.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function () {
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // Mete fonksyon an pou chak layer
+  setupLayerUpload('layer1Upload', 'layer1Img');
+  setupLayerUpload('layer2Upload', 'layer2Img');
+</script>
+<div class="bg-gray-700 p-2 rounded space-y-2">
+  <p class="font-semibold">Layer 3 - Text</p>
+  <input type="text" id="layerText" placeholder="Antre tèks ou" class="bg-gray-600 text-white p-1 w-full rounded" />
+  <select id="fontStyle" class="bg-gray-600 text-white p-1 w-full rounded">
+    <option value="Roboto">Roboto</option>
+    <option value="Georgia">Georgia</option>
+    <option value="Impact">Impact</option>
+  </select>
+  <input type="range" id="textSize" min="10" max="100" value="36" class="w-full" />
+  <div id="textLayer" class="text-white mt-2 text-center">Sample text</div>
+</div>
+<script>
+  const textInput = document.getElementById('layerText');
+  const fontStyle = document.getElementById('fontStyle');
+  const textSize = document.getElementById('textSize');
+  const textLayer = document.getElementById('textLayer');
+
+  function updateText() {
+    textLayer.textContent = textInput.value;
+    textLayer.style.fontFamily = fontStyle.value;
+    textLayer.style.fontSize = textSize.value + "px";
+  }
+
+  textInput.addEventListener('input', updateText);
+  fontStyle.addEventListener('change', updateText);
+  textSize.addEventListener('input', updateText);
+</script>
+<input type="range" min="0" max="100" value="100" id="layer1Opacity" class="w-full" />
+<script>
+  const layer1Img = document.getElementById('layer1Img');
+  const layer1Opacity = document.getElementById('layer1Opacity');
+
+  layer1Opacity.addEventListener('input', () => {
+    layer1Img.style.opacity = layer1Opacity.value / 100;
+  });
+</script>
+<div class="space-y-2">
+  <p class="font-semibold">Transform Imaj:</p>
+  <input type="range" id="rotateRange" min="0" max="360" value="0" class="w-full" />
+  <input type="range" id="scaleRange" min="0.5" max="2" step="0.1" value="1" class="w-full" />
+  <button id="flipBtn" class="bg-gray-700 px-2 py-1 rounded text-white">Flip Horizontal</button>
+</div>
+
+<img id="transformImg" src="" class="mt-4 max-w-full h-auto" />
+<script>
+  const rotateRange = document.getElementById('rotateRange');
+  const scaleRange = document.getElementById('scaleRange');
+  const flipBtn = document.getElementById('flipBtn');
+  const img = document.getElementById('transformImg');
+  let flipped = false;
+
+  function updateTransform() {
+    const rotate = rotateRange.value;
+    const scale = scaleRange.value;
+    const flip = flipped ? -1 : 1;
+    img.style.transform = `rotate(${rotate}deg) scaleX(${flip * scale}) scaleY(${scale})`;
+  }
+
+  rotateRange.addEventListener('input', updateTransform);
+  scaleRange.addEventListener('input', updateTransform);
+  flipBtn.addEventListener('click', () => {
+    flipped = !flipped;
+    updateTransform();
+  });
+</script>
+<select id="filterSelect" class="w-full bg-gray-600 text-white p-1 rounded">
+  <option value="none">None</option>
+  <option value="grayscale(100%)">Black & White</option>
+  <option value="sepia(80%)">Sepia</option>
+  <option value="blur(3px)">Blur</option>
+  <option value="contrast(200%)">Sharpen</option>
+</select>
+<script>
+  const filterSelect = document.getElementById('filterSelect');
+  filterSelect.addEventListener('change', () => {
+    img.style.filter = filterSelect.value;
+  });
+</script>
+<select id="blendMode" class="w-full bg-gray-600 text-white p-1 rounded">
+  <option value="normal">Normal</option>
+  <option value="multiply">Multiply</option>
+  <option value="overlay">Overlay</option>
+  <option value="screen">Screen</option>
+  <option value="soft-light">Soft Light</option>
+</select>
+<script>
+  const blendMode = document.getElementById('blendMode');
+  blendMode.addEventListener('change', () => {
+    img.style.mixBlendMode = blendMode.value;
+  });
+</script>
+<div class="space-y-2">
+  <p class="font-semibold">Mask Layer:</p>
+  <input type="file" id="maskUpload" accept="image/*" class="w-full bg-gray-600 text-white p-1 rounded" />
+</div>
+<script>
+  const maskUpload = document.getElementById('maskUpload');
+  maskUpload.addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        img.style.maskImage = `url(${reader.result})`;
+        img.style.webkitMaskImage = `url(${reader.result})`;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+<aside></a<section class="bg-gray-800 p-4 space-y-6 text-white">
+
+  <!-- 🌀 Transform Tools -->
+  <div>
+    <h3 class="text-xl font-bold">🌀 Transform Tools</h3>
+    <input type="range" id="rotateRange" min="0" max="360" value="0" class="w-full">
+    <input type="range" id="scaleRange" min="0.5" max="2" step="0.1" value="1" class="w-full mt-2">
+    <button id="flipBtn" class="bg-blue-600 px-3 py-1 rounded mt-2">Flip Horizontal</button>
+  </div>
+
+  <!-- 🎨 Filters -->
+  <div>
+    <h3 class="text-xl font-bold">🎨 Filters</h3>
+    <select id="filterSelect" class="bg-gray-700 px-2 py-1 rounded w-full">
+      <option value="none">None</option>
+      <option value="grayscale(100%)">Black & White</option>
+      <option value="sepia(80%)">Sepia</option>
+      <option value="blur(3px)">Blur</option>
+      <option value="contrast(200%)">Sharpen</option>
+    </select>
+  </div>
+
+  <!-- 🔥 Blend Modes -->
+  <div>
+    <h3 class="text-xl font-bold">🔥 Blend Modes</h3>
+    <select id="blendMode" class="bg-gray-700 px-2 py-1 rounded w-full">
+      <option value="normal">Normal</option>
+      <option value="multiply">Multiply</option>
+      <option value="overlay">Overlay</option>
+      <option value="screen">Screen</option>
+      <option value="soft-light">Soft Light</option>
+    </select>
+  </div>
+
+  <!-- 🧪 Mask System -->
+  <div>
+    <h3 class="text-xl font-bold">🧪 Layer Mask</h3>
+    <input type="file" id="maskUpload" accept="image/*" class="bg-gray-700 p-2 rounded w-full">
+  </div>
+
+  <!-- 🧠 AI Boosts -->
+  <div>
+    <h3 class="text-xl font-bold">🧠 AI Boosts</h3>
+    <button class="bg-green-600 px-3 py-1 rounded">Remove Background (API)</button>
+    <button class="bg-purple-600 px-3 py-1 rounded ml-2">Facial Retouch (API)</button>
+    <p class="text-sm mt-2 text-gray-300">⚠️ API keys obligatwa. M ka ede w entegre yo.</p>
+  </div>
+
+</section>
+<script>
+  const img = document.getElementById('transformImg');
+  let flipped = false;
+
+  // 🌀 Transform
+  document.getElementById('rotateRange').addEventListener('input', updateTransform);
+  document.getElementById('scaleRange').addEventListener('input', updateTransform);
+  document.getElementById('flipBtn').addEventListener('click', () => {
+    flipped = !flipped;
+    updateTransform();
+  });
+
+  function updateTransform() {
+    const rotate = document.getElementById('rotateRange').value;
+    const scale = document.getElementById('scaleRange').value;
+    const flip = flipped ? -1 : 1;
+    img.style.transform = `rotate(${rotate}deg) scaleX(${flip * scale}) scaleY(${scale})`;
+  }
+
+  // 🎨 Filters
+  document.getElementById('filterSelect').addEventListener('change', function () {
+    img.style.filter = this.value;
+  });
+
+  // 🔥 Blend Modes
+  document.getElementById('blendMode').addEventListener('change', function () {
+    img.style.mixBlendMode = this.value;
+  });
+
+  // 🧪 Mask System
+  document.getElementById('maskUpload').addEventListener('change', function () {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        img.style.maskImage = `url(${reader.result})`;
+        img.style.webkitMaskImage = `url(${reader.result})`;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+side> 
+transformImg const img = document.getElementById('transformImg');<img id="transformImg" src="" class="max-w-full h-auto mt-4" />
+<input type="file" id="layer1Upload" accept="image/*" />
+<img id="layer1Img" />
+setupLayerUpload('layer1Upload', 'layer1Img');
+<input type="file" id="testUpload" accept="image/*" />
+<div id="preview"></div>
+
+<script>
+document.getElementById('testUpload').addEventListener('change', function () {
+  const file = this.files[0];
+  const reader = new FileReader();
+  reader.onload = function () {
+    const img = document.createElement('img');
+    img.src = reader.result;
+    img.className = "max-w-full mt-2";
+    document.getElementById('preview').appendChild(img);
+  };
+  reader.readAsDataURL(file);
+});
+</script>
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+  <meta charset="UTF-8">
+  <title>KING CG Test Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white font-sans p-4">
+
+  <h1 class="text-3xl font-bold mb-4">👑 KING CG Photoshop Test</h1>
+
+  <!-- Upload Image -->
+  <div class="mb-4">
+    <input type="file" id="uploadImage" accept="image/*" class="bg-gray-800 p-2 rounded w-full" />
+  </div>
+
+  <!-- Image Display -->
+  <div id="imageZone" class="mt-4">
+    <img id="mainImage" src="" class="max-w-full h-auto rounded" />
+  </div>
+
+  <!-- Transform Tools -->
+  <div class="mt-8 space-y-4 bg-gray-800 p-4 rounded">
+    <h2 class="text-xl font-bold">🌀 Transform Tools</h2>
+    <label>Rotate:</label>
+    <input type="range" id="rotateRange" min="0" max="360" value="0" class="w-full" />
+    <label>Scale:</label>
+    <input type="range" id="scaleRange" min="0.5" max="2" step="0.1" value="1" class="w-full" />
+    <button id="flipBtn" class="bg-blue-600 px-3 py-1 rounded mt-2">Flip Horizontal</button>
+  </div>
+
+  <!-- Filters -->
+  <div class="mt-8 space-y-4 bg-gray-800 p-4 rounded">
+    <h2 class="text-xl font-bold">🎨 Filters</h2>
+    <select id="filterSelect" class="bg-gray-700 px-2 py-1 rounded w-full">
+      <option value="none">None</option>
+      <option value="grayscale(100%)">Black & White</option>
+      <option value="sepia(80%)">Sepia</option>
+      <option value="blur(3px)">Blur</option>
+      <option value="contrast(200%)">Sharpen</option>
+    </select>
+  </div>
+
+  <!-- Blend Modes -->
+  <div class="mt-8 space-y-4 bg-gray-800 p-4 rounded">
+    <h2 class="text-xl font-bold">🔥 Blend Modes</h2>
+    <select id="blendMode" class="bg-gray-700 px-2 py-1 rounded w-full">
+      <option value="normal">Normal</option>
+      <option value="multiply">Multiply</option>
+      <option value="overlay">Overlay</option>
+      <option value="screen">Screen</option>
+      <option value="soft-light">Soft Light</option>
+    </select>
+  </div>
+
+  <script>
+    // Upload image preview
+    const uploadInput = document.getElementById('uploadImage');
+    const mainImage = document.getElementById('mainImage');
+    let flipped = false;
+
+    uploadInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function () {
+          mainImage.src = reader.result;
+          mainImage.style.transform = 'none';
+          mainImage.style.filter = 'none';
+          mainImage.style.mixBlendMode = 'normal';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Transform tools
+    document.getElementById('rotateRange').addEventListener('input', updateTransform);
+    document.getElementById('scaleRange').addEventListener('input', updateTransform);
+    document.getElementById('flipBtn').addEventListener('click', () => {
+      flipped = !flipped;
+      updateTransform();
+    });
+
+    function updateTransform() {
+      const rotate = document.getElementById('rotateRange').value;
+      const scale = document.getElementById('scaleRange').value;
+      const flip = flipped ? -1 : 1;
+      mainImage.style.transform = `rotate(${rotate}deg) scaleX(${flip * scale}) scaleY(${scale})`;
+    }
+
+    // Filter
+    document.getElementById('filterSelect').addEventListener('change', function () {
+      mainImage.style.filter = this.value;
+    });
+
+    // Blend Mode
+    document.getElementById('blendMode').addEventListener('change', function () {
+      mainImage.style.mixBlendMode = this.value;
+    });
+  </script>
+
+</body>
+</html>
+<section class="grid grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+
+  <!-- Photo Editing -->
+  <div class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">🖼️ Photo Editing</h2>
+    <p class="text-gray-300 text-sm">Retouch, filtre, efè pwofesyonèl</p>
+  </div>
+
+  <!-- Logo Design -->
+  <div class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">🎯 Logo Design</h2>
+    <p class="text-gray-300 text-sm">Kreye identite vizyèl pou mak ou</p>
+  </div>
+
+  <!-- Flyers / Posters -->
+  <div class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">📣 Flyers & Posters</h2>
+    <p class="text-gray-300 text-sm">Pwomosyon evènman, biznis, sèvis</p>
+  </div>
+
+  <!-- Cartes Biznis -->
+  <div class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">💼 Cartes Biznis</h2>
+    <p class="text-gray-300 text-sm">Design kat pwofesyonèl pou kontak</p>
+  </div>
+
+  <!-- Cartes Maryaj -->
+  <div class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">💍 Cartes Maryaj</h2>
+    <p class="text-gray-300 text-sm">Envitasyon, save-the-date, décoration</p>
+  </div>
+
+  <!-- UI Design / Identite Vizyèl -->
+  <div class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">🧩 UI & Branding</h2>
+    <p class="text-gray-300 text-sm">Design layout, aplikasyon, sistem koulè</p>
+  </div>
+
+</section>
+<section class="grid grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+
+  <button onclick="loadEditor('photo')" class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">🖼️ Photo Editing</h2>
+    <p class="text-gray-300 text-sm">Retouch, filtre, efè pwofesyonèl</p>
+  </button>
+
+  <button onclick="loadEditor('logo')" class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">🎯 Logo Design</h2>
+    <p class="text-gray-300 text-sm">Kreye identite vizyèl pou mak ou</p>
+  </button>
+
+  <button onclick="loadEditor('flyer')" class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">📣 Flyers & Posters</h2>
+    <p class="text-gray-300 text-sm">Pwomosyon evènman, biznis, sèvis</p>
+  </button>
+
+  <button onclick="loadEditor('card')" class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">💼 Cartes Biznis</h2>
+    <p class="text-gray-300 text-sm">Design kat pwofesyonèl pou kontak</p>
+  </button>
+
+  <button onclick="loadEditor('wedding')" class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">💍 Cartes Maryaj</h2>
+    <p class="text-gray-300 text-sm">Envitasyon, save-the-date, décoration</p>
+  </button>
+
+  <button onclick="loadEditor('branding')" class="bg-gray-800 p-4 rounded hover:bg-gray-700 cursor-pointer">
+    <h2 class="text-lg font-bold">🧩 UI & Branding</h2>
+    <p class="text-gray-300 text-sm">Design layout, aplikasyon, sistem koulè</p>
+  </button>
+
+</section>
+<script>
+  function loadEditor(type) {
+    const zone = document.getElementById('editorZone');
+    zone.innerHTML = ''; // Netwaye
+
+    switch(type) {
+      case 'photo':
+        zone.innerHTML = `<h2 class="text-xl font-bold mb-2">🖼️ Photo Editing Tools</h2>
+          <p class="text-sm text-gray-300">Koupe, filtre, efè, retouch rapid</p>`;
+        break;
+
+      case 'logo':
+        zone.innerHTML = `<h2 class="text-xl font-bold mb-2">🎯 Logo Creator</h2>
+          <p class="text-sm text-gray-300">Font pairing, vector shapes, SVG export</p>`;
+        break;
+
+      case 'flyer':
+        zone.innerHTML = `<h2 class="text-xl font-bold mb-2">📣 Flyer Design Studio</h2>
+          <p class="text-sm text-gray-300">Templates, layouts, color themes</p>`;
+        break;
+
+      case 'card':
+        zone.innerHTML = `<h2 class="text-xl font-bold mb-2">💼 Business Card Maker</h2>
+          <p class="text-sm text-gray-300">QR code, font guide, double-face export</p>`;
+        break;
+
+      case 'wedding':
+        zone.innerHTML = `<h2 class="text-xl font-bold mb-2">💍 Wedding Card Studio</h2>
+          <p class="text-sm text-gray-300">Floral designs, gold brushes, elegance</p>`;
+        break;
+
+      case 'branding':
+        zone.innerHTML = `<h2 class="text-xl font-bold mb-2">🧩 UI & Visual Identity</h2>
+          <p class="text-sm text-gray-300">Layout helpers, palette tools, UI elements</p>`;
+        break;
+    }
+  }
+</script>
+loadEditor()<script>
+function loadEditor(type) {
+  const zone = document.getElementById('editorZone');
+  zone.innerHTML = '';
+
+  switch(type) {
+    case 'photo':
+      zone.innerHTML = `
+        <h2 class="text-xl font-bold mb-4">🖼️ Photo Editing Tools</h2>
+        <input type="file" id="photoUpload" accept="image/*" class="bg-gray-700 text-white p-2 rounded w-full mb-2" />
+        <img id="photoCanvas" class="max-w-full mt-4" />
+      `;
+      setTimeout(() => {
+        const input = document.getElementById('photoUpload');
+        const canvas = document.getElementById('photoCanvas');
+        input.addEventListener('change', function () {
+          const file = this.files[0];
+          const reader = new FileReader();
+          reader.onload = () => canvas.src = reader.result;
+          reader.readAsDataURL(file);
+        });
+      }, 100);
+      break;
+
+    case 'logo':
+      zone.innerHTML = `
+        <h2 class="text-xl font-bold mb-4">🎯 Logo Creator</h2>
+        <input type="text" id="logoText" placeholder="Antre non mak ou" class="bg-gray-700 text-white p-2 rounded w-full mb-2" />
+        <select id="logoFont" class="bg-gray-700 text-white p-2 rounded w-full mb-2">
+          <option value="Roboto">Roboto</option>
+          <option value="Impact">Impact</option>
+          <option value="Pacifico">Pacifico</option>
+        </select>
+        <input type="color" id="logoColor" class="w-full h-10 mb-4" />
+        <div id="logoPreview" class="text-center text-4xl font-bold">KING CG</div>
+      `;
+      setTimeout(() => {
+        const logoText = document.getElementById('logoText');
+        const logoFont = document.getElementById('logoFont');
+        const logoColor = document.getElementById('logoColor');
+        const logoPreview = document.getElementById('logoPreview');
+        function updateLogo() {
+          logoPreview.textContent = logoText.value || 'KING CG';
+          logoPreview.style.fontFamily = logoFont.value;
+          logoPreview.style.color = logoColor.value;
+        }
+        logoText.addEventListener('input', updateLogo);
+        logoFont.addEventListener('change', updateLogo);
+        logoColor.addEventListener('input', updateLogo);
+      }, 100);
+      break;
+
+    case 'flyer':
+      zone.innerHTML = `
+        <h2 class="text-xl font-bold mb-4">📣 Flyer Design Studio</h2>
+        <input type="text" id="flyerTitle" placeholder="Tit afich ou" class="bg-gray-700 text-white p-2 rounded w-full mb-2" />
+        <textarea id="flyerDesc" placeholder="Deskripsyon" class="bg-gray-700 text-white p-2 rounded w-full mb-2" rows="3"></textarea>
+        <input type="color" id="flyerBgColor" class="w-full h-10 mb-4" />
+        <div id="flyerCanvas" class="p-6 rounded text-center text-white" style="background:#2d2d2d">
+          <h3 id="flyerPreviewTitle" class="text-2xl font-bold">Evènman</h3>
+          <p id="flyerPreviewDesc">Detay evènman ou yo ap parèt isit la</p>
+        </div>
+      `;
+      setTimeout(() => {
+        const flyerTitle = document.getElementById('flyerTitle');
+        const flyerDesc = document.getElementById('flyerDesc');
+        const flyerBgColor = document.getElementById('flyerBgColor');
+        const flyerPreviewTitle = document.getElementById('flyerPreviewTitle');
+        const flyerPreviewDesc = document.getElementById('flyerPreviewDesc');
+        const flyerCanvas = document.getElementById('flyerCanvas');
+        function updateFlyer() {
+          flyerPreviewTitle.textContent = flyerTitle.value || 'Evènman';
+          flyerPreviewDesc.textContent = flyerDesc.value || '';
+          flyerCanvas.style.background = flyerBgColor.value;
+        }
+        flyerTitle.addEventListener('input', updateFlyer);
+        flyerDesc.addEventListener('input', updateFlyer);
+        flyerBgColor.addEventListener('input', updateFlyer);
+      }, 100);
+      break;
+
+    // Ou ka ajoute 'card', 'wedding', 'branding' menm fason si ou vle
+  }
+}
+</script>
+<div id="editorZone" class="mt-8"></div>
+<head><<meta name="description" content="KING CG Photoshop Design - kreye logo, flyers, kat biznis, retouch foto sou entènèt.">
+<meta name="keywords" content="KING CG, design logo, flyers, kat biznis, photoshop web, retouch imaj">
+<title>KING CG Photoshop Design</title>
+<h1 class="text-3xl font-bold text-center">👑 Bienvenue sou KING CG Photoshop Design</h1>
+<p class="text-center text-gray-300">Kote ou ka kreye tout sa k fè yon mak gade wa — soti nan logo rive nan flyers ak kart maryaj</p>
+/head><link rel="icon" type="image/png" href="images/kingcg-logo.png">
+git init
+git remote add origin https://github.com/USERNAME/kingcg.git
+git add .
+git commit -m "Premye vèsyon sit KING CG"
+git push -u origin master
+
